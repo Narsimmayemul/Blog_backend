@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-app.use(cors())
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +13,7 @@ const JWT_SECRET = 'your_jwt_secret';
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors())
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://narsimma123:yemul123@cluster0.mpwqvph.mongodb.net/blog_data');
