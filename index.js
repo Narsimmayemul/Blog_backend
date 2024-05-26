@@ -103,6 +103,15 @@ app.get('/api/posts', async (req, res) => {
   }
 });
 
+app.get('/api/posts/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const posts = await BlogPost.findOne({_id:id}).populate('authorId', 'username');
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+});
 // Update a blog post
 app.put('/api/posts/:id', verifyToken, async (req, res) => {
   const { title, content } = req.body;
