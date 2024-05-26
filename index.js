@@ -65,6 +65,20 @@ app.post('/api/login', async (req, res) => {
 });
 
 
+// const verifyToken = (req, res, next) => {
+//   const token = req.headers.authorization?.split(' ')[1];
+//   if (!token) {
+//     return res.status(403).json({ message: 'Authorization token is required' });
+//   }
+//   try {
+//     const decoded = jwt.verify(token, JWT_SECRET);
+//     req.userId = decoded.userId;
+//     next();
+//   } catch (error) {
+//     res.status(401).json({ message: 'Token is not valid' });
+//   }
+// };
+
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -73,11 +87,13 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.userId;
+    console.log(`Decoded user ID from token: ${req.userId}`);
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });
   }
 };
+
 
 // CRUD operations for BlogPosts
 
@@ -113,15 +129,19 @@ app.get('/api/posts/:id', async (req, res) => {
   }
 });
 // Update a blog post
-app.put('/api/posts/:id', async (req, res) => {
+app.put('/api/posts/:id', verifyToken, async (req, res) => {
   const { title, content } = req.body;
   const postId = req.params.id;
+  console.log(`Received request to update post with ID: ${postId}`);
+
   try {
     const updatedPost = await BlogPost.findOneAndUpdate(
       { _id: postId, authorId: req.userId },
       { title, content },
       { new: true }
     );
+
+    console.log(updatedPost);
     if (!updatedPost) {
       return res.status(404).json({ message: 'Post not found or user not authorized' });
     }
@@ -130,6 +150,7 @@ app.put('/api/posts/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Delete a blog post
 app.delete('/api/posts/:id', async (req, res) => {
