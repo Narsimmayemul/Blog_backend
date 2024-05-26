@@ -132,7 +132,7 @@ app.put('/api/posts/:id', async (req, res) => {
 });
 
 // Delete a blog post
-app.delete('/api/posts/:id', verifyToken, async (req, res) => {
+app.delete('/api/posts/:id', async (req, res) => {
   const postId = req.params.id;
   try {
     const deletedPost = await BlogPost.findOneAndDelete({ _id: postId, authorId: req.userId });
