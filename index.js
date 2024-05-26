@@ -147,6 +147,21 @@ app.delete('/api/posts/:id', async (req, res) => {
 
 // CRUD operations for Comments
 
+
+// get comment 
+
+// Fetch comments for a specific blog post
+app.get('/api/posts/:postId/comments', async (req, res) => {
+  const postId = req.params.postId;
+  try {
+    const comments = await Comment.find({ postId }).populate('userId', 'username');
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: error.message})
+  }
+})
+
+
 // Add a comment to a post
 app.post('/api/posts/:postId/comments', async (req, res) => {
   const { comment } = req.body;
