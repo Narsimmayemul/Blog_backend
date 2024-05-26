@@ -148,11 +148,12 @@ app.delete('/api/posts/:id', async (req, res) => {
 // CRUD operations for Comments
 
 // Add a comment to a post
-app.post('/api/posts/:postId/comments', verifyToken, async (req, res) => {
+app.post('/api/posts/:postId/comments', async (req, res) => {
   const { comment } = req.body;
   const { postId } = req.params;
+  console.log(req);
   try {
-    const newComment = new Comment({ postId, userId: req.userId, comment });
+    const newComment = new Comment({ postId, comment });
     await newComment.save();
     res.status(201).json({ message: 'Comment added successfully', comment: newComment });
   } catch (error) {
