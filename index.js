@@ -113,7 +113,7 @@ app.get('/api/posts/:id', async (req, res) => {
   }
 });
 // Update a blog post
-app.put('/api/posts/:id', verifyToken, async (req, res) => {
+app.put('/api/posts/:id', async (req, res) => {
   const { title, content } = req.body;
   const postId = req.params.id;
   try {
